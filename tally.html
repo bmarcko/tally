@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>STEMJuander Survey Tally</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script>
+    var studentCounter = 1;
+    var surveyResults = {};
+
+    function tallySurvey() {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        checkboxes.forEach(function(checkbox) {
+            if (surveyResults[checkbox.name]) {
+                if (surveyResults[checkbox.name][checkbox.value]) {
+                    surveyResults[checkbox.name][checkbox.value] += 1;
+                } else {
+                    surveyResults[checkbox.name][checkbox.value] = 1;
+                }
+            } else {
+                surveyResults[checkbox.name] = { [checkbox.value]: 1 };
+            }
+        });
+
+        displayResults();
+        increaseStudentCounter();
+    }
+
+    function increaseStudentCounter() {
+        studentCounter++;
+        displayStudentCounter();
+    }
+
+    function decreaseStudentCounter() {
+        if (studentCounter > 1) {
+            studentCounter--;
+        }
+        displayStudentCounter();
+    }
+
+    function displayStudentCounter() {
+        document.getElementById('studentCounter').innerText = 'Student Number: ' + studentCounter;
+    }
+
+    function displayResults() {
+        var resultElement = document.getElementById('result');
+        resultElement.innerHTML = '<h3>Survey Results:</h3>';
+        for (var key in surveyResults) {
+            resultElement.innerHTML += '<h4>' + key + '</h4>';
+            for (var option in surveyResults[key]) {
+                resultElement.innerHTML += option + ': ' + surveyResults[key][option] +
+                    '&nbsp;&nbsp;<button onclick="decrementTally(\'' + key + '\', \'' + option + '\')">-</button>' +
+                    '&nbsp;&nbsp;<button onclick="incrementTally(\'' + key + '\', \'' + option + '\')">+</button>' +
+                    '<br><br>';
+            }
+            resultElement.innerHTML += '<br>';
+        }
+    }
+
+    function resetCheckboxes() {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = false;
+        });
+    }
+
+    function incrementTally(question, option) {
+        if (surveyResults[question] && surveyResults[question][option]) {
+            surveyResults[question][option] += 1;
+        }
+        displayResults();
+    }
+
+    function decrementTally(question, option) {
+        if (surveyResults[question] && surveyResults[question][option] && surveyResults[question][option] > 0) {
+            surveyResults[question][option] -= 1;
+        }
+        displayResults();
+    }
+
+    function saveSurveyResults() {
+        var data = JSON.stringify(surveyResults, null, 2);
+        var blob = new Blob([data], {type: 'text/plain'});
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'survey_results.txt';
+        a.click();
+    }
+</script>
+</head>
+<body class="container">
+    <h2>STEMJuander Survey Tally</h2>
+    <div class="my-3">
+        <div id="studentCounter">Student Number: 1</div>
+        <button onclick="decreaseStudentCounter()">-</button>
+        <button onclick="increaseStudentCounter()">+</button>
+    </div>
+<!--HELLO PO-->    
+    <form id="surveyForm" class="my-3">
+        <h2>Section 1: E-Learning System</h2>
+        <h3>Question 1: Have you previously used an e-learning system (an online platform for educational purposes, such as Google Classroom) for your studies?</h3>
+        <input type="checkbox" name="Q1" value="Yes"> Yes<br>
+        <input type="checkbox" name="Q1" value="No"> No<br>
+
+        <h3>Question 2: How effective did you find the e-learning system in improving your learning experience?</h3>
+        <input type="checkbox" name="Q2" value="Highly effective"> Highly effective<br>
+        <input type="checkbox" name="Q2" value="Moderately effective"> Moderately effective<br>
+        <input type="checkbox" name="Q2" value="Somewhat effective"> Somewhat effective<br>
+        <input type="checkbox" name="Q2" value="Not effective at all"> Not effective at all<br>
+
+        <h3>Question 3: How frequently do you typically use the e-learning system?</h3>
+        <h4>a. During the pandemic:</h4>
+        <input type="checkbox" name="Q3a" value="Frequently"> Frequently<br>
+        <input type="checkbox" name="Q3a" value="Sometimes"> Sometimes<br>
+        <input type="checkbox" name="Q3a" value="Occasionally"> Occasionally<br>
+        <input type="checkbox" name="Q3a" value="Rarely"> Rarely<br>
+        <h4>b. Currently:</h4>
+        <input type="checkbox" name="Q3b" value="Frequently"> Frequently<br>
+        <input type="checkbox" name="Q3b" value="Sometimes"> Sometimes<br>
+        <input type="checkbox" name="Q3b" value="Occasionally"> Occasionally<br>
+        <input type="checkbox" name="Q3b" value="Rarely"> Rarely<br>
+
+        <h3>Question 4: How would you rate the ease of use of the e-learning system?</h3>
+        <input type="checkbox" name="Q4" value="Easy"> Easy<br>
+        <input type="checkbox" name="Q4" value="Somewhat easy"> Somewhat easy<br>
+        <input type="checkbox" name="Q4" value="Somewhat difficult"> Somewhat difficult<br>
+        <input type="checkbox" name="Q4" value="Difficult"> Difficult<br>
+
+        <h3>Question 5: How would you rate the overall quality of the e-learning system?</h3>
+        <input type="checkbox" name="Q5" value="Excellent"> Excellent<br>
+        <input type="checkbox" name="Q5" value="Good"> Good<br>
+        <input type="checkbox" name="Q5" value="Fair"> Fair<br>
+        <input type="checkbox" name="Q5" value="Poor"> Poor<br>
+
+        <h3>Question 6: How satisfied are you with the support provided by the e-learning system for students with learning difficulties?</h3>
+        <input type="checkbox" name="Q6" value="Very satisfied"> Very satisfied<br>
+        <input type="checkbox" name="Q6" value="Somewhat satisfied"> Somewhat satisfied<br>
+        <input type="checkbox" name="Q6" value="Somewhat dissatisfied"> Somewhat dissatisfied<br>
+        <input type="checkbox" name="Q6" value="Very dissatisfied"> Very dissatisfied<br>
+
+    <h2>Section 2: Measures Taken by Students Struggling with their Lessons</h2>
+        <h3>Question 7: Have you ever faced challenges or struggles with your lessons?</h3>
+        <input type="checkbox" name="Q7" value="Yes"> Yes<br>
+        <input type="checkbox" name="Q7" value="No"> No<br>
+
+        <h4>a. If yes, what measures have you taken to improve your learning experience among the following options (please check all that applies):</h4>
+        <input type="checkbox" name="Q7a" value="Online video tutorials"> Online video tutorials<br>
+        <input type="checkbox" name="Q7a" value="Online lessons and assessments"> Online lessons and assessments<br>
+        <input type="checkbox" name="Q7a" value="Personal tutor"> Personal tutor<br>
+        <input type="checkbox" name="Q7a" value="Peer support"> Peer support<br>
+        <input type="checkbox" name="Q7a" value="Other"> Other (please specify): <input type="text" name="other_specification"><br>
+
+    <h2>Section 3: Access to the Internet</h2>
+        <h3>Question 8: Do you have access to the internet at home?</h3>
+        <input type="checkbox" name="Q8" value="Yes"> Yes<br>
+        <input type="checkbox" name="Q8" value="No"> No<br>
+
+        <h4>a. If yes, how often do you use the internet for your studies?</h4>
+        <input type="checkbox" name="Q8a" value="Frequently"> Frequently<br>
+        <input type="checkbox" name="Q8a" value="Occasionally"> Occasionally<br>
+        <input type="checkbox" name="Q8a" value="Rarely"> Rarely<br>
+        <input type="checkbox" name="Q8a" value="Never"> Never<br>
+
+        <h3>Question 9: How would you rate the quality of your internet connection?</h3>
+        <input type="checkbox" name="Q9" value="Excellent"> Excellent<br>
+        <input type="checkbox" name="Q9" value="Good"> Good<br>
+        <input type="checkbox" name="Q9" value="Fair"> Fair<br>
+        <input type="checkbox" name="Q9" value="Poor"> Poor<br>
+
+        <h3>Question 10: Have you ever encountered difficulties accessing the e-learning system due to a poor internet connection?</h3>
+        <input type="checkbox" name="Q10" value="No"> No<br>
+        <input type="checkbox" name="Q10" value="Yes"> Yes<br>
+
+    <h2>Section 4: Application Design and User-Friendliness</h2>
+        <h3>Question 11: How would you rate the design of STEMJuander in terms of visual appeal and organization?</h3>
+        <input type="checkbox" name="Q11" value="Excellent"> Excellent<br>
+        <input type="checkbox" name="Q11" value="Good"> Good<br>
+        <input type="checkbox" name="Q11" value="Fair"> Fair<br>
+        <input type="checkbox" name="Q11" value="Poor"> Poor<br>
+
+        <h3>Question 12: Is the interface of STEMJuander user-friendly and easy to navigate?</h3>
+        <input type="checkbox" name="Q12" value="Extremely user-friendly"> Extremely user-friendly<br>
+        <input type="checkbox" name="Q12" value="Moderately user-friendly"> Moderately user-friendly<br>
+        <input type="checkbox" name="Q12" value="Somewhat user-friendly"> Somewhat user-friendly<br>
+        <input type="checkbox" name="Q12" value="Not user-friendly"> Not user-friendly<br>
+
+        <h3>Question 13: Does STEMJuander provide clear and concise instructions for its use?</h3>
+        <input type="checkbox" name="Q13" value="Very clear"> Very clear<br>
+        <input type="checkbox" name="Q13" value="Moderately clear"> Moderately clear<br>
+        <input type="checkbox" name="Q13" value="Somewhat clear"> Somewhat clear<br>
+        <input type="checkbox" name="Q13" value="Not clear at all"> Not clear at all<br>
+
+        <h3>Question 14: Are the menus, buttons, and features within STEMJuander logically organized and easy to find?</h3>
+        <input type="checkbox" name="Q14" value="Extremely organized"> Extremely organized<br>
+        <input type="checkbox" name="Q14" value="Moderately organized"> Moderately organized<br>
+        <input type="checkbox" name="Q14" value="Somewhat organized"> Somewhat organized<br>
+        <input type="checkbox" name="Q14" value="Not organized at all"> Not organized at all<br>
+
+        <h3>Question 15: How satisfied are you with the overall user-friendliness and design of STEMJuander?</h3>
+        <input type="checkbox" name="Q15" value="Very satisfied"> Very satisfied<br>
+        <input type="checkbox" name="Q15" value="Somewhat satisfied"> Somewhat satisfied<br>
+        <input type="checkbox" name="Q15" value="Somewhat dissatisfied"> Somewhat dissatisfied<br>
+        <input type="checkbox" name="Q15" value="Very dissatisfied"> Very dissatisfied<br>
+
+        <h3>Question 16: How easy was it to take a quiz using STEMJuander?</h3>
+        <input type="checkbox" name="Q16" value="Easy"> Easy<br>
+        <input type="checkbox" name="Q16" value="Somewhat easy"> Somewhat easy<br>
+        <input type="checkbox" name="Q16" value="Somewhat difficult"> Somewhat difficult<br>
+        <input type="checkbox" name="Q16" value="Difficult"> Difficult<br>
+
+        <h3>Question 17: How easy was it for you to watch and grasp the content presented in the video lessons on STEMJuander?</h3>
+        <input type="checkbox" name="Q17" value="Easy"> Easy<br>
+        <input type="checkbox" name="Q17" value="Somewhat easy"> Somewhat easy<br>
+        <input type="checkbox" name="Q17" value="Somewhat difficult"> Somewhat difficult<br>
+        <input type="checkbox" name="Q17" value="Difficult"> Difficult<br>
+
+        <h3>Question 18: How effective did you find STEMJuander in assisting you with your struggles in a subject?</h3>
+        <input type="checkbox" name="Q18" value="Highly effective"> Highly effective<br>
+        <input type="checkbox" name="Q18" value="Moderately effective"> Moderately effective<br>
+        <input type="checkbox" name="Q18" value="Somewhat effective"> Somewhat effective<br>
+        <input type="checkbox" name="Q18" value="Not effective at all"> Not effective at all<br>
+
+        <br>
+<!--IGALAW MO ANG BASO PAG NAKITA MO TO-->
+        <input type="button" value="Submit" onclick="tallySurvey(); resetCheckboxes()"><br>
+    </form>
+    <div id="result"></div><br>
+    <button onclick="saveSurveyResults()">Save</button>
+</body>
+</html>
